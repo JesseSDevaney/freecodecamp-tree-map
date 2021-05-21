@@ -23,6 +23,7 @@ export default function createTreeMap(data) {
     .attr("width", width)
     .attr("height", height);
 
+  // Plot treemap
   const color = d3
     .scaleOrdinal()
     .range([...d3.schemeCategory10, ...d3.schemeSet2]);
@@ -90,4 +91,43 @@ export default function createTreeMap(data) {
       i === nodes.length - 1 ? 0.7 : null
     )
     .text((d) => d);
+
+  // plot legend
+  const categories = root.children.map(({ data: { name } }) => [name]);
+
+  const legendPadX = 10;
+  const legendPadY = 10;
+
+  const legendContainer = svg
+    .append("g")
+    .attr("id", "legend")
+    .attr(
+      "transform",
+      `translate(${padLeft + legendPadX}, ${height - padBottom + legendPadY})`
+    );
+  const legend = legendContainer.selectAll("g").data(categories).join("g");
+
+  const legendKeyLength = 10;
+  const changeInX =
+    (width - padLeft - padRight - 2 * legendPadX) /
+    Math.floor((categories.length - 1) / 3 + 1);
+  const changeInY = (padBottom - 2 * legendPadY) / 3;
+
+  // legend keys
+  legend
+    .append("rect")
+    .attr("class", "legend-item")
+    .attr("width", legendKeyLength)
+    .attr("height", legendKeyLength)
+    .attr("x", (d, i) => changeInX * Math.floor(i / 3))
+    .attr("y", (d, i) => changeInY * (i % 3))
+    .attr("fill", (d) => color(d));
+
+  // legend values
+  legend
+    .append("text")
+    .text((d) => d)
+    .attr("x", (d, i) => changeInX * Math.floor(i / 3) + 15)
+    .attr("y", (d, i) => changeInY * (i % 3) + legendKeyLength / 2)
+    .attr("dominant-baseline", "middle");
 }
