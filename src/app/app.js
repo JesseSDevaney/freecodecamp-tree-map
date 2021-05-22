@@ -48,7 +48,12 @@ export default function createTreeMap(data) {
 
   const leaf = svg
     .selectAll("g")
-    .data(root.leaves())
+    .data(root.leaves(), (d) => {
+      let pointer = d;
+      while (pointer.depth > 1) pointer = pointer.parent;
+      d.category = pointer.data.name;
+      return d;
+    })
     .join("g")
     .attr("transform", (d) => `translate(${d.x0 + padLeft}, ${d.y0 + padTop})`);
 
@@ -57,16 +62,14 @@ export default function createTreeMap(data) {
     .attr("id", (d) => (d.leafUid = uid("leaf")).id)
     .attr("class", "tile")
     .attr("fill", (d) => {
-      while (d.depth > 1) d = d.parent;
-      return color(d.data.name);
+      return color(d.category);
     })
     .attr("fill-opacity", 0.6)
     .attr("width", (d) => d.x1 - d.x0)
     .attr("height", (d) => d.y1 - d.y0)
     .attr("data-name", (d) => d.data.name)
     .attr("data-category", (d) => {
-      while (d.depth > 1) d = d.parent;
-      return d.data.name;
+      return d.category;
     })
     .attr("data-value", (d) => d.value);
 
@@ -97,7 +100,6 @@ export default function createTreeMap(data) {
 
   const legendPadX = 10;
   const legendPadY = 10;
-
   const legendContainer = svg
     .append("g")
     .attr("id", "legend")
@@ -105,7 +107,6 @@ export default function createTreeMap(data) {
       "transform",
       `translate(${padLeft + legendPadX}, ${height - padBottom + legendPadY})`
     );
-  const legend = legendContainer.selectAll("g").data(categories).join("g");
 
   const legendKeyLength = 10;
   const changeInX =
@@ -113,6 +114,7 @@ export default function createTreeMap(data) {
     Math.floor((categories.length - 1) / 3 + 1);
   const changeInY = (padBottom - 2 * legendPadY) / 3;
 
+  const legend = legendContainer.selectAll("g").data(categories).join("g");
   // legend keys
   legend
     .append("rect")
