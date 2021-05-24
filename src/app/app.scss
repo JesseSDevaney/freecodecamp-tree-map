@@ -7,4 +7,28 @@
     stroke: black;
     stroke-width: 1;
   }
+
+  g {
+    &:hover {
+      rect {
+        stroke: black;
+        stroke-width: 1;
+      }
+    }
+  }
+}
+
+#tooltip {
+  text {
+    fill: #ffffff;
+    font-size: 11px;
+  }
+
+  #tooltip-category {
+    font-weight: bold;
+  }
+
+  #tooltip-name {
+    fill: #ffffffc7;
+  }
 }

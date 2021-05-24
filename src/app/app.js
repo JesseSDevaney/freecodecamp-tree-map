@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import uid from "./uid";
+import wrap from "./wrap";
 import "./app.scss";
 
 export default function createTreeMap(data) {
@@ -55,7 +56,78 @@ export default function createTreeMap(data) {
       return d;
     })
     .join("g")
-    .attr("transform", (d) => `translate(${d.x0 + padLeft}, ${d.y0 + padTop})`);
+    .attr("transform", (d) => `translate(${d.x0 + padLeft}, ${d.y0 + padTop})`)
+    .on("mouseenter", (event, d) => {
+      const { target } = event;
+
+      const targetTransform = target.getAttribute("transform");
+      const transformMatches = targetTransform.match(
+        /translate\(([.\d]+), ([.\d]+)\)/
+      );
+      const transformX = parseFloat(transformMatches[1], 10);
+      const transformY = parseFloat(transformMatches[2], 10);
+
+      const tooltipWidth = 150;
+      const tooltipHeight = 80;
+
+      const centerTooltipX = (d.x1 - d.x0 - tooltipWidth) / 2;
+
+      let tooltipX = transformX + centerTooltipX;
+      let tooltipY = transformY - tooltipHeight - 5;
+
+      // adjust tooltip position if it goes out of the view of the svg
+      if (tooltipX < 0) {
+        tooltipX = 5;
+      } else if (tooltipX + tooltipWidth > width) {
+        tooltipX = width - tooltipWidth - 5;
+      }
+
+      if (tooltipY < 0) {
+        tooltipY = transformY + (d.y1 - d.y0) + 5;
+      }
+
+      const tooltip = svg
+        .append("g")
+        .attr("id", "tooltip")
+        .attr("data-value", name)
+        .attr("transform", `translate(${tooltipX}, ${tooltipY})`);
+
+      tooltip
+        .append("rect")
+        .attr("fill", "#000000")
+        .attr("fill-opacity", "0.85")
+        .attr("width", tooltipWidth)
+        .attr("height", tooltipHeight);
+
+      const { name, category, value } = d.data;
+
+      tooltip
+        .append("text")
+        .attr("id", "tooltip-category")
+        .attr("x", 3)
+        .attr("y", `1.1em`)
+        .text(`Category: ${category}`)
+        .call(wrap, tooltipWidth - 5);
+
+      tooltip
+        .append("text")
+        .attr("id", "tooltip-value")
+        .attr("x", 3)
+        .attr("y", `${1.1 + 1 * 1.1}em`)
+        .text(`Value: ${value}`)
+        .call(wrap, tooltipWidth - 5);
+
+      tooltip
+        .append("text")
+        .attr("id", "tooltip-name")
+        .attr("x", 3)
+        .attr("y", `${1.1 + 2 * 1.1 + 0.3}em`)
+        .text(`Name: ${name}`)
+        .call(wrap, tooltipWidth - 5);
+    })
+    .on("mouseleave", () => {
+      d3.select("#tooltip").remove();
+    });
 
   leaf
     .append("rect")
