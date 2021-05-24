@@ -214,4 +214,16 @@ export default function createTreeMap(data) {
     .attr("y", 15)
     .attr("dominant-baseline", "hanging")
     .attr("text-anchor", "middle");
+
+  // plot description
+  svg
+    .append("text")
+    .attr("id", "description")
+    .text(
+      "Game sales are proportional to tile area and are grouped by individual markets."
+    )
+    .attr("x", width / 2)
+    .attr("y", 15 + 35)
+    .attr("dominant-baseline", "hanging")
+    .attr("text-anchor", "middle");
 }
