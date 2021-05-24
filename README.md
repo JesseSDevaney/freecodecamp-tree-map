@@ -6,6 +6,8 @@
 
 My project that I am completing for FreeCodeCamp's Tree Map Project in their [Data Visualization](https://www.freecodecamp.org/learn/data-visualization/) course.
 
+View a live demo of my project on CodePen: [Tree Map](https://codepen.io/jessesdevaney/full/VwpbEvp)
+
 ## License
 
 Copyright (c) 2021 Jesse S. Devaney  
