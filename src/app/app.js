@@ -204,4 +204,14 @@ export default function createTreeMap(data) {
     .attr("x", (d, i) => changeInX * Math.floor(i / 3) + 15)
     .attr("y", (d, i) => changeInY * (i % 3) + legendKeyLength / 2)
     .attr("dominant-baseline", "middle");
+
+  // plot title
+  svg
+    .append("text")
+    .attr("id", "title")
+    .text("Video Game Sales Data Top 100")
+    .attr("x", width / 2)
+    .attr("y", 15)
+    .attr("dominant-baseline", "hanging")
+    .attr("text-anchor", "middle");
 }
