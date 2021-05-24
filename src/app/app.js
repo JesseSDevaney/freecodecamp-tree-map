@@ -32,7 +32,7 @@ export default function createTreeMap(data) {
   const padRight = 0.05 * width;
   const padLeft = 0.05 * width;
   const padTop = 0.13 * height;
-  const padBottom = 0.15 * height;
+  const padBottom = 0.12 * height;
   const treeMapWidth = width - padRight - padLeft;
   const treeMapHeight = height - padTop - padBottom;
 
@@ -58,14 +58,8 @@ export default function createTreeMap(data) {
     .join("g")
     .attr("transform", (d) => `translate(${d.x0 + padLeft}, ${d.y0 + padTop})`)
     .on("mouseenter", (event, d) => {
-      const { target } = event;
-
-      const targetTransform = target.getAttribute("transform");
-      const transformMatches = targetTransform.match(
-        /translate\(([.\d]+), ([.\d]+)\)/
-      );
-      const transformX = parseFloat(transformMatches[1], 10);
-      const transformY = parseFloat(transformMatches[2], 10);
+      const transformX = d.x0 + padLeft;
+      const transformY = d.y0 + padTop;
 
       const tooltipWidth = 150;
       const tooltipHeight = 80;
@@ -86,10 +80,12 @@ export default function createTreeMap(data) {
         tooltipY = transformY + (d.y1 - d.y0) + 5;
       }
 
+      const { name, category, value } = d.data;
+
       const tooltip = svg
         .append("g")
         .attr("id", "tooltip")
-        .attr("data-value", name)
+        .attr("data-value", value)
         .attr("transform", `translate(${tooltipX}, ${tooltipY})`);
 
       tooltip
@@ -98,8 +94,6 @@ export default function createTreeMap(data) {
         .attr("fill-opacity", "0.85")
         .attr("width", tooltipWidth)
         .attr("height", tooltipHeight);
-
-      const { name, category, value } = d.data;
 
       tooltip
         .append("text")
