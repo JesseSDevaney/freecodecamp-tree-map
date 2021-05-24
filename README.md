@@ -1,6 +1,6 @@
 # FreeCodeCamp: Visualizing Data with a Tree-map
 
-[![GitHub](https://img.shields.io/github/license/jessesdevaney/tree-map?style=flat-square)](https://github.com/jessesdevaney/tree-map/blob/main/LICENSE)
+[![GitHub](https://img.shields.io/github/license/jessesdevaney/freecodecamp-tree-map?style=flat-square)](https://github.com/jessesdevaney/freecodecamp-tree-map/blob/main/LICENSE)
 
 ## Description
 
